@@ -1,14 +1,15 @@
 import { Connection } from 'typeorm';
 import { UserRepository } from '../../../repositories/UserRepository';
 import { UserNotExist } from '../view/responses';
+import { dateTimeRangeList } from 'aws-sdk/clients/health';
 
 interface OutputData {
     id: string;
     name: string;
     email: string;
     mobile: string;
-    email_verified_at: string;
-    mobile_verified_at: string;
+    email_verified_at: dateTimeRangeList;
+    mobile_verified_at: dateTimeRangeList;
 }
 
 export class ViewAction {
@@ -31,8 +32,8 @@ export class ViewAction {
             name: user.name,
             email: user.email,
             mobile: user.mobile,
-            email_verified_at: user.mobile,
-            mobile_verified_at: user.mobile,
+            email_verified_at: user.email_verified_at,
+            mobile_verified_at: user.mobile_verified_at,
         };
     }
 }
