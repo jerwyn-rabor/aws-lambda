@@ -1,6 +1,5 @@
 import { Model } from './Model';
 import { Column, Entity } from 'typeorm';
-import { dateTimeRangeList } from 'aws-sdk/clients/health';
 
 @Entity({
     name: 'users',
@@ -30,12 +29,22 @@ export class UserModel extends Model {
     public password: string;
 
     @Column({
-        type: 'datetime',
+        type: 'integer',
     })
-    public email_verified_at: dateTimeRangeList;
+    public attempts: number;
 
     @Column({
         type: 'datetime',
     })
-    public mobile_verified_at: dateTimeRangeList;
+    public attempts_at: string;
+
+    @Column({
+        type: 'datetime',
+    })
+    public email_verified_at: string;
+
+    @Column({
+        type: 'varchar',
+    })
+    public mobile_verified_at: string;
 }

@@ -3,7 +3,7 @@ import { UserRepository } from '../../../repositories/UserRepository';
 import { UserNotExist } from './responses';
 
 interface OutputData {
-    user_id: string;
+    id: string;
     name: string;
     email: string;
     mobile: string;
@@ -25,7 +25,7 @@ export class DeleteAction {
         const user = await this.repository.deleteUser(uuid);
 
         return {
-            user_id: user.uuid,
+            id: user.uuid,
             name: user.name,
             email: user.email,
             mobile: user.mobile,

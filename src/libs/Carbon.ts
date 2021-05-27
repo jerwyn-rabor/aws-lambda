@@ -38,4 +38,9 @@ export class Carbon {
     static epoch(timestamp: number): moment.Moment {
         return moment.unix(timestamp / 1000);
     }
+
+    static greaterThanDateTime(date: string): boolean {
+        const now = moment().subtract(10, 'minute');
+        return moment(date, 'YYYY-MM-DD HH:mm:ss') < now;
+    }
 }
