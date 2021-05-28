@@ -12,7 +12,7 @@ export default (request: RegisterRequest): RegisterRequest => {
                 .regex(/^09\d{9}$/)
                 .messages({ 'string.pattern.base': `Phone number must have 11 digits (Format: 09XXXXXXXXX).` })
                 .required(),
-            password: joi.string().alphanum().min(8).max(10).required(),
+            password: joi.string().alphanum().min(8).max(50).required(),
         })
         .required();
 

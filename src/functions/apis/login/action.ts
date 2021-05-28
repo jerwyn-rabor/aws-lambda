@@ -36,11 +36,12 @@ export class LoginAction {
 
         if (!user) throw new AuthAccessDeniedByUsername();
 
-        const unlock = Carbon.greaterThanDateTime(user.attempts_at);
+        if (user.attempts === MIN_ATTEMPT) {
+            const unlock = Carbon.greaterThanDateTime(user.attempts_at);
 
-        if (user.attempts == MIN_ATTEMPT) {
-            if (unlock && !user.attempts_at) await this.repository.updateUnlockUser(user.uuid);
-            else {
+            if (unlock) {
+                await this.repository.updateUnlockUser(user.uuid);
+            } else {
                 await this.repository.updateLockUser(user.uuid);
                 throw new AuthAccessDeniedByLockedAccount();
             }
@@ -48,7 +49,7 @@ export class LoginAction {
 
         if (!bcrypt.compareSync(password, user.password)) {
             await this.repository.updateAttemptOfUser(user.uuid);
-            const attempt = (unlock && !user.attempts_at ? MAX_ATTEMPT : user.attempts) - 1;
+            const attempt = (user.attempts == MIN_ATTEMPT ? MAX_ATTEMPT : user.attempts) - 1;
             throw new AuthAccessDeniedByPassword(attempt);
         }
 
