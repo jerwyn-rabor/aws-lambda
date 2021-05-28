@@ -1,5 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { UserModel } from '../models/UserModel';
+import { Carbon } from '../libs/Carbon';
+import { MAX_ATTEMPT } from '../helpers/variables';
 
 @EntityRepository(UserModel)
 export class UserRepository extends Repository<UserModel> {
@@ -8,6 +10,31 @@ export class UserRepository extends Repository<UserModel> {
             .where('users.email = :username', { username })
             .orWhere('users.mobile = :username', { username })
             .getOne();
+    }
+
+    async updateAttemptOfUser(uuid: string): Promise<void> {
+        await this.createQueryBuilder()
+            .update()
+            .set({ attempts: () => 'attempts - 1' })
+            .where('uuid = :uuid', { uuid: uuid })
+            .execute();
+    }
+
+    async updateLockUser(uuid: string): Promise<void> {
+        const now = Carbon.nowFormatted();
+        await this.createQueryBuilder()
+            .update()
+            .set({ attempts_at: now })
+            .where('uuid = :uuid', { uuid: uuid })
+            .execute();
+    }
+
+    async updateUnlockUser(uuid: string): Promise<void> {
+        await this.createQueryBuilder()
+            .update()
+            .set({ attempts: MAX_ATTEMPT, attempts_at: undefined })
+            .where('uuid = :uuid', { uuid: uuid })
+            .execute();
     }
 
     // eslint-disable-next-line @typescript-eslint/ban-types
@@ -28,9 +55,8 @@ export class UserRepository extends Repository<UserModel> {
     }
 
     async getUserByUuid(uuid: string): Promise<UserModel> {
-        const user = await this.findOneOrFail({
+        return await this.findOneOrFail({
             uuid: uuid,
         });
-        return user;
     }
 }

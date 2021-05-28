@@ -13,7 +13,7 @@ export class UserSeeder {
         user.name = faker.name.firstName();
         user.email = faker.internet.email();
         user.mobile = `09${faker.random.number(999999999).toString().padStart(9, '0')}`;
-        user.password = Bcrypt.generate(faker.random.alphaNumeric(18));
+        user.password = Bcrypt.generateHashPassword(faker.random.alphaNumeric(18));
         await repository.save(user);
 
         return user;

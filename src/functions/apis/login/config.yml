@@ -1,0 +1,10 @@
+login:
+  handler: src/functions/apis/login/handler.execute
+  events:
+    - http:
+        path: /login
+        method: post
+        timeout: 300
+        cors: true
+
+  environment:
